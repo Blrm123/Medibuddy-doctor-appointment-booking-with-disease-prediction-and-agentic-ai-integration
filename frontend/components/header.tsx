@@ -19,7 +19,13 @@ import { Badge } from "./ui/badge";
 import Image from "next/image";
 
 export default async function Header() {
-  const user = await checkUser();
+  let user = null;
+  try {
+    user = await checkUser();
+  } catch (error) {
+    console.error("Header checkUser error:", error);
+  }
+
   if (user?.role === "PATIENT" && user?.id) {
     try {
       await checkAndAllocateCredits(user as Parameters<typeof checkAndAllocateCredits>[0]);
@@ -27,6 +33,7 @@ export default async function Header() {
       console.error("Failed to allocate credits:", error);
     }
   }
+
 
   return (
     <header className="fixed top-0 w-full border-b bg-background/80 backdrop-blur-md z-10 supports-[backdrop-filter]:bg-background/60">

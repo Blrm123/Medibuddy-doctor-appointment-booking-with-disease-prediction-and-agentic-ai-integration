@@ -3,6 +3,11 @@ import { db } from "./prisma";
 
 export const checkUser = async () => {
   try {
+    if (!process.env.CLERK_SECRET_KEY || !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+      console.warn("Clerk environment variables are not configured.");
+      return null;
+    }
+
     const user = await currentUser();
 
     if (!user) {
@@ -17,7 +22,6 @@ export const checkUser = async () => {
         transactions: {
           where: {
             type: "CREDIT_PURCHASE",
-            // Only get transactions from current month
             createdAt: {
               gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
             },
@@ -62,4 +66,3 @@ export const checkUser = async () => {
     return null;
   }
 };
-
