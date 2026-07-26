@@ -42,23 +42,12 @@ export interface TimeSlotDay {
    VONAGE VIDEO CLIENT
 ------------------------------------------------------------ */
 
-// Lazy Initialize Vonage Video API client safely
-function getVonageClient() {
-  try {
-    const appId = process.env.NEXT_PUBLIC_VONAGE_APPLICATION_ID;
-    const privKey = process.env.VONAGE_PRIVATE_KEY;
-    if (!appId || !privKey) return null;
-    const credentials = new Auth({
-      applicationId: appId,
-      privateKey: privKey,
-    });
-    return new Vonage(credentials, {});
-  } catch (error) {
-    console.error("Vonage client initialization failed:", error);
-    return null;
-  }
-}
-
+// Initialize Vonage Video API client
+const credentials = new Auth({
+  applicationId: process.env.NEXT_PUBLIC_VONAGE_APPLICATION_ID!,
+  privateKey: process.env.VONAGE_PRIVATE_KEY!,
+});
+const vonage = new Vonage(credentials, {});
 
 /**
  * Book a new appointment with a doctor
@@ -468,13 +457,13 @@ export async function getAvailableTimeSlots(
     // Convert to array of slots grouped by day for easier consumption by the UI
     const result: TimeSlotDay[] = Object.entries(availableSlotsByDay).map(
       ([date, slots]) => ({
-      date,
-      displayDate:
-        slots.length > 0
-          ? slots[0].day
-          : format(new Date(date), "EEEE, MMMM d"),
-      slots,
-    })
+        date,
+        displayDate:
+          slots.length > 0
+            ? slots[0].day
+            : format(new Date(date), "EEEE, MMMM d"),
+        slots,
+      })
     );
 
     return { days: result };
