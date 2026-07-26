@@ -2,13 +2,13 @@ import { currentUser } from "@clerk/nextjs/server";
 import { db } from "./prisma";
 
 export const checkUser = async () => {
-  const user = await currentUser();
-
-  if (!user) {
-    return null;
-  }
-
   try {
+    const user = await currentUser();
+
+    if (!user) {
+      return null;
+    }
+
     const loggedInUser = await db.user.findUnique({
       where: {
         clerkUserId: user.id, 
@@ -34,14 +34,14 @@ export const checkUser = async () => {
       return loggedInUser;
     }
 
-    const name = `${user.firstName} ${user.lastName}`;
+    const name = `${user.firstName || ""} ${user.lastName || ""}`.trim() || "User";
 
     const newUser = await db.user.create({
       data: {
         clerkUserId: user.id,
         name,
         imageUrl: user.imageUrl,
-        email: user.emailAddresses[0].emailAddress,
+        email: user.emailAddresses[0]?.emailAddress || "",
         transactions: {
           create: {
             type: "CREDIT_PURCHASE",
@@ -55,9 +55,11 @@ export const checkUser = async () => {
     return newUser;
   } catch (error) {
     if (error instanceof Error) {
-      console.log(error.message);
+      console.error("checkUser error:", error.message);
     } else {
-      console.log(String(error));
+      console.error("checkUser error:", String(error));
     }
+    return null;
   }
 };
+
