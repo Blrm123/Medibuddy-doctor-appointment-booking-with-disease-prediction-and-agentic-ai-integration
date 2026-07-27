@@ -19,7 +19,7 @@ primary_llm = ChatGroq(
 )
 
 fallback_llm = ChatGroq(
-    model="llama3-8b-8192",
+    model="llama-3.1-8b-instant",
     temperature=0.3,
     api_key=config.GROQ_API_KEY
 )

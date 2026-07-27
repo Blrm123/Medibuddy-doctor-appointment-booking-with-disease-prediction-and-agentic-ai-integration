@@ -12,7 +12,7 @@ from agent.prompt import MEDICAL_PROMPT, REPORT_SPECIALIST_PROMPT
 os.environ["GROQ_API_KEY"] = config.GROQ_API_KEY
 
 llm = ChatGroq(
-    model="llama3-8b-8192",
+    model="llama-3.3-70b-versatile",
     temperature=0.2,
     api_key=config.GROQ_API_KEY
 )
