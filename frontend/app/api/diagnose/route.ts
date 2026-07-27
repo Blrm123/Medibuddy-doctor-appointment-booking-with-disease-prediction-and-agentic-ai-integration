@@ -33,8 +33,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const backendUrl =
-      process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+    const backendUrl = process.env.BACKEND_URL || "http://localhost:8000";
 
     // Convert base64 to blob for the backend
     const base64Data = imageData.split(",")[1] || imageData;

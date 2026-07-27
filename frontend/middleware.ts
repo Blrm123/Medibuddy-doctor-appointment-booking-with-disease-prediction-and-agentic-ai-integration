@@ -4,7 +4,8 @@ export default clerkMiddleware();
 
 export const config = {
   matcher: [
-    // Match all routes including static assets & 404 pages so Clerk context is always active
-    '/(.*)',
+    // Skip static assets but always establish Clerk context for app and API routes.
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    "/(api|trpc)(.*)",
   ],
 };
